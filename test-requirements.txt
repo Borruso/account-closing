@@ -1,0 +1,2 @@
+odoo-addon-account_cutoff_base @ git+https://github.com/OCA/account-closing.git@refs/pull/311/head#subdirectory=account_cutoff_base
+odoo-addon-account_invoice_start_end_dates @ git+https://github.com/OCA/account-closing.git@refs/pull/309/head#subdirectory=account_invoice_start_end_dates
