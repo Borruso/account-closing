@@ -20,10 +20,10 @@
             </field>
         </field>
     </record>
-    <record id="account_cutoff_line_tree" model="ir.ui.view">
-        <field name="name">account.cutoff.line.prepaid.tree</field>
+    <record id="account_cutoff_line_list" model="ir.ui.view">
+        <field name="name">account.cutoff.line.prepaid.list</field>
         <field name="model">account.cutoff.line</field>
-        <field name="inherit_id" ref="account_cutoff_base.account_cutoff_line_tree" />
+        <field name="inherit_id" ref="account_cutoff_base.account_cutoff_line_list" />
         <field name="arch" type="xml">
             <field name="analytic_distribution" position="after">
                 <field name="start_date" optional="show" />

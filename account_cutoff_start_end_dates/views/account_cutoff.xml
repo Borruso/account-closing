@@ -5,10 +5,10 @@
   License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 -->
 <odoo>
-    <record id="account_cutoff_tree" model="ir.ui.view">
-        <field name="name">account.cutoff.start.end.dates.tree</field>
+    <record id="account_cutoff_list" model="ir.ui.view">
+        <field name="name">account.cutoff.start.end.dates.list</field>
         <field name="model">account.cutoff</field>
-        <field name="inherit_id" ref="account_cutoff_base.account_cutoff_tree" />
+        <field name="inherit_id" ref="account_cutoff_base.account_cutoff_list" />
         <field name="arch" type="xml">
             <field name="cutoff_date" position="after">
                 <field

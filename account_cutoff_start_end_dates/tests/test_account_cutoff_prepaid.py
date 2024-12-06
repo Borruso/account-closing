@@ -6,7 +6,7 @@
 
 import time
 
-from odoo import fields
+from odoo import Command, fields
 from odoo.tests.common import TransactionCase
 
 
@@ -22,7 +22,7 @@ class TestCutoffPrepaid(TransactionCase):
         cls.account_expense = cls.account_model.create(
             {
                 "account_type": "expense",
-                "company_id": cls.main_company.id,
+                "company_ids": [Command.link(cls.main_company.id)],
                 "name": "Test expense",
                 "code": "TE.1",
             }
@@ -30,7 +30,7 @@ class TestCutoffPrepaid(TransactionCase):
         cls.account_payable = cls.account_model.create(
             {
                 "account_type": "liability_payable",
-                "company_id": cls.main_company.id,
+                "company_ids": [Command.link(cls.main_company.id)],
                 "name": "Test payable",
                 "code": "TP.1",
             }
@@ -38,7 +38,7 @@ class TestCutoffPrepaid(TransactionCase):
         cls.account_cutoff = cls.account_model.create(
             {
                 "account_type": "liability_current",
-                "company_id": cls.main_company.id,
+                "company_ids": [Command.link(cls.main_company.id)],
                 "name": "Test cutoff",
                 "code": "TC.1",
             }

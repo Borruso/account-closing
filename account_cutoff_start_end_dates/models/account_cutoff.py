@@ -2,7 +2,7 @@
 # @author: Alexis de Lattre <alexis.delattre@akretion.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
 
@@ -52,14 +52,16 @@ class AccountCutoff(models.Model):
                 and rec.end_date
                 and rec.start_date > rec.end_date
             ):
-                raise ValidationError(_("The start date is after the end date!"))
+                raise ValidationError(
+                    rec.env._("The start date is after the end date!")
+                )
 
     def forecast_enable(self):
         self.ensure_one()
         assert self.state == "draft"
         if self.move_id:
             raise UserError(
-                _(
+                self.env._(
                     "This cutoff is linked to a journal entry. "
                     "You must delete it before entering forecast mode."
                 )
@@ -172,7 +174,7 @@ class AccountCutoff(models.Model):
         aml_obj = self.env["account.move.line"]
         line_obj = self.env["account.cutoff.line"]
         if not self.source_journal_ids:
-            raise UserError(_("You should set at least one Source Journal."))
+            raise UserError(self.env._("You should set at least one Source Journal."))
         mapping = self._get_mapping_dict()
         domain = [
             ("journal_id", "in", self.source_journal_ids.ids),
@@ -189,7 +191,9 @@ class AccountCutoff(models.Model):
             if self.state == "forecast":
                 if not self.start_date or not self.end_date:
                     raise UserError(
-                        _("Start date and end date are required for forecast mode.")
+                        self.env._(
+                            "Start date and end date are required for forecast mode."
+                        )
                     )
                 domain += [
                     ("start_date", "!=", False),
