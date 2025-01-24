@@ -7,7 +7,7 @@ from datetime import datetime
 import pytz
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import float_compare, float_is_zero
 from odoo.tools.misc import format_date, format_datetime, formatLang
@@ -44,10 +44,14 @@ class AccountCutoff(models.Model):
         qty_prec = dpo.precision_get("Product Unit of Measure")
         if self.cutoff_type in ("accrued_expense", "accrued_revenue"):
             qty = vdict["precut_delivered_qty"] - vdict["precut_invoiced_qty"]
-            qty_label = _("Pre-cutoff delivered quantity minus invoiced quantity:")
+            qty_label = self.env._(
+                "Pre-cutoff delivered quantity minus invoiced quantity:"
+            )
         elif self.cutoff_type in ("prepaid_expense", "prepaid_revenue"):
             qty = vdict["precut_invoiced_qty"] - vdict["precut_delivered_qty"]
-            qty_label = _("Pre-cutoff invoiced quantity minus delivered quantity:")
+            qty_label = self.env._(
+                "Pre-cutoff invoiced quantity minus delivered quantity:"
+            )
 
         if float_compare(qty, 0, precision_digits=qty_prec) <= 0:
             return False
@@ -73,23 +77,31 @@ class AccountCutoff(models.Model):
         )
         notes += (
             "\n"
-            + _("Pre-cutoff delivered quantity:")
+            + self.env._("Pre-cutoff delivered quantity:")
             + f" {precut_delivered_qty_fl} {uom_name}"
         )
         if vdict.get("precut_delivered_logs"):
             param = "\n".join(vdict["precut_delivered_logs"])
-            notes += "\n" + _("Pre-cutoff delivered quantity details:") + f"\n{param}"
+            notes += (
+                "\n"
+                + self.env._("Pre-cutoff delivered quantity details:")
+                + f"\n{param}"
+            )
         precut_invoiced_qty_fl = formatLang(
             self.env, vdict.get("precut_invoiced_qty", 0), dp="Product Unit of Measure"
         )
         notes += (
             "\n"
-            + _("Pre-cutoff invoiced quantity:")
+            + self.env._("Pre-cutoff invoiced quantity:")
             + f" {precut_invoiced_qty_fl} {uom_name}"
         )
         if vdict.get("precut_invoiced_logs"):
             param = "\n".join(vdict["precut_invoiced_logs"])
-            notes += "\n" + _("Pre-cutoff invoiced quantity details:") + f"\n{param}"
+            notes += (
+                "\n"
+                + self.env._("Pre-cutoff invoiced quantity details:")
+                + f"\n{param}"
+            )
         qty_fl = formatLang(self.env, qty, dp="Product Unit of Measure")
         notes += f"\n{qty_label} {qty_fl} {uom_name}"
 
@@ -174,7 +186,7 @@ class AccountCutoff(models.Model):
             ordered_qty = order_line.product_uom._compute_quantity(
                 order_line.product_qty, product_uom
             )
-            wdict["notes"] = _(
+            wdict["notes"] = self.env._(
                 "Purchase order %(order)s confirmed on %(confirm_date)s\n"
                 "Purchase Order Line: %(order_line)s (ordered qty: %(qty)s %(uom)s)"
             ) % {
@@ -188,7 +200,7 @@ class AccountCutoff(models.Model):
             ordered_qty = order_line.product_uom._compute_quantity(
                 order_line.product_uom_qty, product_uom
             )
-            wdict["notes"] = _(
+            wdict["notes"] = self.env._(
                 "Sale order %(order)s confirmed on %(confirm_date)s\n"
                 "Sale Order Line: %(order_line)s (ordered qty: %(qty)s %(uom)s)"
             ) % {
@@ -222,7 +234,7 @@ class AccountCutoff(models.Model):
                 self.env, move_qty_signed, dp="Product Unit of Measure"
             )
             wdict["precut_delivered_logs"].append(
-                _(
+                self.env._(
                     " • %(qty)s %(uom)s (picking %(picking)s transfered on %(date)s "
                     "from %(src_location)s to %(dest_location)s)"
                 )
@@ -304,7 +316,7 @@ class AccountCutoff(models.Model):
             account = product._get_product_accounts()["expense"]
             if not account:
                 raise UserError(
-                    _(
+                    self.env._(
                         "Missing expense account on product '%(product)s' or on its "
                         "related product category '%(categ)s'."
                     )
@@ -326,7 +338,7 @@ class AccountCutoff(models.Model):
             account = product._get_product_accounts()["income"]
             if not account:
                 raise UserError(
-                    _(
+                    self.env._(
                         "Missing income account on product '%(product)s' or on its "
                         "related product category '%(categ)s'."
                     )
